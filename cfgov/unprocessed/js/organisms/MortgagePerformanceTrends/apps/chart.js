@@ -1,7 +1,6 @@
 'use strict';
 
 var ccb = require( 'cfpb-chart-builder-canary' );
-var actions = require( '../actions' );
 var Store = require( '../stores/chart' );
 var utils = require( '../utils' );
 
@@ -63,38 +62,30 @@ MortgagePerformanceLineChart.prototype.onChange = function( event ) {
       geoEl = this['$' + geoType];
       geoId = geoEl.value;
       geoName = geoEl.options[geoEl.selectedIndex].text;
-      action = actions.setGeo( geoId, geoName, geoType );
       break;
     case 'mp-line-chart_geo-county':
-      action = actions.fetchCounties( this.$state.options[this.$state.selectedIndex].getAttribute( 'data-abbr' ) );
       break;
     case 'mp-line-chart-state':
       geoType = this.$container.querySelector( 'input[name="mp-line-chart_geo"]:checked' ).id.replace( 'mp-line-chart_geo-', '' );
       if ( geoType === 'state' ) {
         geoId = this.$state.value;
         geoName = this.$state.options[this.$state.selectedIndex].text;
-        action = actions.updateChart( geoId, geoName, 'state', includeNational );
       } else {
         geoId = this.$county.value;
         geoName = this.$county.options[this.$county.selectedIndex].text;
-        action = actions.fetchCounties( this.$state.options[this.$state.selectedIndex].getAttribute( 'data-abbr' ), includeNational );
       }
       break;
     case 'mp-line-chart-metro':
       geoId = this.$metro.value;
       geoName = this.$metro.options[this.$metro.selectedIndex].text;
-      action = actions.updateChart( geoId, geoName, 'metro', includeNational );
       break;
     case 'mp-line-chart-county':
       geoId = this.$county.value;
       geoName = this.$county.options[this.$county.selectedIndex].text;
-      action = actions.updateChart( geoId, geoName, 'county', includeNational );
       break;
     case 'mp-line-chart-compare':
-      action = actions.updateNational( includeNational );
       break;
     default:
-      action = actions.clearGeo();
   }
 
   store.dispatch( action );
@@ -114,7 +105,6 @@ MortgagePerformanceLineChart.prototype.renderChart = function( prevState, state 
     return this.chart.update( {
       source: baseSource
     } ).then( () => {
-      store.dispatch( actions.stopLoading() );
     } );
   }
 
@@ -126,8 +116,7 @@ MortgagePerformanceLineChart.prototype.renderChart = function( prevState, state 
   this.chart.update( {
     source: source
   } ).then( () => {
-    store.dispatch( actions.stopLoading() );
-  } );
+g  } );
 };
 
 MortgagePerformanceLineChart.prototype.renderChartForm = function( prevState, state ) {

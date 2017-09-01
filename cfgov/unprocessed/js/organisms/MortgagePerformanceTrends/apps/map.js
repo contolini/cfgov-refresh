@@ -1,7 +1,6 @@
 'use strict';
 
 var ccb = require( 'cfpb-chart-builder-canary' );
-var actions = require( '../actions' );
 var Store = require( '../stores/map' );
 var utils = require( '../utils' );
 
@@ -65,39 +64,32 @@ MortgagePerformanceMap.prototype.onChange = function( event ) {
       geoType = this.$container.querySelector( 'input[name="mp-map_geo"]:checked' ).id.replace( 'mp-map_geo-', '' );
       geoId = '';
       geoName = '';
-      action = actions.setGeo( geoId, geoName, geoType );
       break;
     case 'mp-map-state':
       geoType = this.$container.querySelector( 'input[name="mp-map_geo"]:checked' ).id.replace( 'mp-map_geo-', '' );
       if ( geoType === 'state' ) {
         geoId = this.$state.value;
         geoName = this.$state.options[this.$state.selectedIndex].text;
-        action = actions.updateChart( geoId, geoName, geoType );
       } else {
         var abbr = this.$state.options[this.$state.selectedIndex].getAttribute( 'data-abbr' );
         if ( !abbr ) {
           return this.chart.highchart.chart.zoomOut();
         }
-        action = actions.fetchCounties( abbr );
       }
       break;
     case 'mp-map-metro':
       geoId = this.$metro.value;
       geoName = this.$metro.options[this.$metro.selectedIndex].text;
-      action = actions.updateChart( geoId, geoName );
       break;
     case 'mp-map-county':
       geoId = this.$county.value;
       geoName = this.$county.options[this.$county.selectedIndex].text;
-      action = actions.updateChart( geoId, geoName );
       break;
     case 'mp-map-month':
     case 'mp-map-year':
       date = `${ this.$year.value }-${ this.$month.value }`;
-      action = actions.updateDate( date );
       break;
     default:
-      action = actions.clearGeo();
   }
 
   store.dispatch( action );
@@ -118,7 +110,6 @@ MortgagePerformanceMap.prototype.renderChart = function( prevState, state ) {
     this.chart.highchart.chart.mapZoom( 5 );
   }
   if ( prevState.date !== state.date || prevState.geo.type !== state.geo.type ) {
-    store.dispatch( actions.startLoading() );
     this.chart.update( {
       source: `map-data/${ this.timespan }/${ _plurals[state.geo.type] }/${ state.date }`,
       metadata: _plurals[state.geo.type]
@@ -128,7 +119,6 @@ MortgagePerformanceMap.prototype.renderChart = function( prevState, state ) {
       this.$county.value = '';
       this.$county.innerHTML = '';
       this.chart.highchart.chart.zoomOut();
-      store.dispatch( actions.stopLoading() );
     } );
   }
 };
