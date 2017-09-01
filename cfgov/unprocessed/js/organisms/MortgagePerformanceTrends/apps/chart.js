@@ -1,10 +1,7 @@
 'use strict';
 
 var ccb = require( 'cfpb-chart-builder-canary' );
-var Store = require( '../stores/chart' );
 var utils = require( '../utils' );
-
-var store = new Store( [ utils.thunkMiddleware, utils.loggerMiddleware ] );
 
 class MortgagePerformanceLineChart {
   constructor( { container } ) {
@@ -35,10 +32,6 @@ class MortgagePerformanceLineChart {
 
 MortgagePerformanceLineChart.prototype.eventListeners = function() {
   this.$form.addEventListener( 'change', this.onChange.bind( this ) );
-  store.subscribe( this.renderChart.bind( this ) );
-  store.subscribe( this.renderChartTitle.bind( this ) );
-  store.subscribe( this.renderChartForm.bind( this ) );
-  store.subscribe( this.renderCounties.bind( this ) );
 };
 
 MortgagePerformanceLineChart.prototype.onClick = function( event ) {
@@ -88,8 +81,6 @@ MortgagePerformanceLineChart.prototype.onChange = function( event ) {
     default:
   }
 
-  store.dispatch( action );
-
 };
 
 MortgagePerformanceLineChart.prototype.renderChart = function( prevState, state ) {
@@ -116,7 +107,7 @@ MortgagePerformanceLineChart.prototype.renderChart = function( prevState, state 
   this.chart.update( {
     source: source
   } ).then( () => {
-g  } );
+  } );
 };
 
 MortgagePerformanceLineChart.prototype.renderChartForm = function( prevState, state ) {

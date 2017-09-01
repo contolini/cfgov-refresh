@@ -1,10 +1,8 @@
 'use strict';
 
 var ccb = require( 'cfpb-chart-builder-canary' );
-var Store = require( '../stores/map' );
 var utils = require( '../utils' );
 
-var store = new Store( [ utils.thunkMiddleware, utils.loggerMiddleware ] );
 
 var _plurals = {
   state: 'states',
@@ -41,10 +39,6 @@ class MortgagePerformanceMap {
 
 MortgagePerformanceMap.prototype.eventListeners = function() {
   this.$form.addEventListener( 'change', this.onChange.bind( this ) );
-  store.subscribe( this.renderChart.bind( this ) );
-  store.subscribe( this.renderChartTitle.bind( this ) );
-  store.subscribe( this.renderChartForm.bind( this ) );
-  store.subscribe( this.renderCounties.bind( this ) );
 };
 
 MortgagePerformanceMap.prototype.onClick = function( event ) {
@@ -91,8 +85,6 @@ MortgagePerformanceMap.prototype.onChange = function( event ) {
       break;
     default:
   }
-
-  store.dispatch( action );
 
 };
 
