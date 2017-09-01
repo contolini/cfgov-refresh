@@ -30,12 +30,7 @@ const modernConf = {
             targets: {
               browsers: environment.getSupportedBrowserList()
             },
-            debug: true,
-            // See https://stackoverflow.com/a/45088328 and
-            // https://github.com/babel/babel-preset-env/tree/v2.0.0-alpha.19#forcealltransforms
-            // Webpack's uglify plugin doesn't play nicely with ES6.
-            // Eventually we should migrate to https://github.com/babel/minify
-            forceAllTransforms: true
+            debug: true
           } ] ]
         }
       } ],
