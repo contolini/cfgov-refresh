@@ -1,6 +1,4 @@
-'use strict';
-
-const amortize = require('amortize');
+const amortize = require( 'amortize' );
 
 const module1 = {
   init: () => {
