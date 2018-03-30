@@ -11,11 +11,26 @@ from wagtail.wagtailcore.models import PageManager
 
 # Our RegDownTextField field doesn't generate a good widget yet
 # from regulations3k.models.fields import RegDownTextField
+from ask_cfpb.models.pages import SecondaryNavigationJSMixin
 from regulations3k.models import Part, Subpart, Section
 from regulations3k.regdown import regdown
 from v1.models import CFGOVPage, CFGOVPageManager
 from v1.atomic_elements import molecules
 from v1.util.util import get_secondary_nav_items
+
+
+# def get_regs_nav_items(request, current_page):
+#     return [
+#         {
+#             'title': section.title,
+#             'url': '/regulations3k/{}/{}/'.format(
+#                 section.label[:4], section.label),
+#             'active': False if not hasattr(current_page, 'ask_category')
+#             else section.name == current_page.ask_category.name,
+#             'expanded': True
+#         }
+#         for section in Section.objects.all()
+#     ], True
 
 
 class RegulationLandingPage(CFGOVPage):
@@ -35,7 +50,7 @@ class RegulationLandingPage(CFGOVPage):
         return 'regulations3k/base.html'
 
 
-class RegulationPage(RoutablePageMixin, CFGOVPage):
+class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
     """A routable page for serving an eregulations page by subpart ID"""
 
     objects = PageManager()
