@@ -19,20 +19,6 @@ from v1.atomic_elements import molecules
 from v1.util.util import get_secondary_nav_items
 
 
-# def get_regs_nav_items(request, current_page):
-#     return [
-#         {
-#             'title': section.title,
-#             'url': '/regulations3k/{}/{}/'.format(
-#                 section.label[:4], section.label),
-#             'active': False if not hasattr(current_page, 'ask_category')
-#             else section.name == current_page.ask_category.name,
-#             'expanded': True
-#         }
-#         for section in Section.objects.all()
-#     ], True
-
-
 class RegulationLandingPage(CFGOVPage):
     """landing page for eregs"""
     objects = CFGOVPageManager()
@@ -88,7 +74,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
     def get_context(self, request, *args, **kwargs):
         context = super(CFGOVPage, self).get_context(request, *args, **kwargs)
-        context.update({'get_secondary_nav_items': get_secondary_nav_items})
+        context.update({'get_secondary_nav_items': get_reg_nav_items})
         context.update({'regulation': self.regulation})
         return context
 
@@ -106,9 +92,28 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
                 label=section_label.replace('-', '.')),
             'section': Section.objects.get(label=section_label),
             'content': regdown(section.contents),
+            'get_secondary_nav_items': get_reg_nav_items
         })
 
         return TemplateResponse(
             request,
             self.template,
             context)
+
+
+def get_reg_nav_items(request, current_page):
+    return [
+        {
+            'title': gathered_section.title,
+            'url': '/eregulations3k/{}/{}/'.format(
+                current_page.regulation.part_number, gathered_section.label),
+            'active': (
+                # current_page.section.label == gathered_section.label
+                # if current_page.section else False),
+                False if not hasattr(current_page, 'section')
+                else current_page.section.label == gathered_section.label),
+            'expanded': True
+        }
+        for gathered_section in Section.objects.filter(
+            label__startswith=current_page.regulation.part_number)
+    ], True
