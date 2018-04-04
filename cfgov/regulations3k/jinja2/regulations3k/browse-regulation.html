@@ -6,6 +6,10 @@
 {% import 'templates/render_block.html' as render_block with context %}
 {% import 'templates/streamfield-sidefoot.html' as streamfield_sidefoot with context %}
 
+{% block content_modifiers -%}
+    {{ super() }} content__hide-horizontal-overflow
+{%- endblock %}
+
 {% block content_main_modifiers -%}
     {{ super() }} content__flush-bottom
 {%- endblock %}
@@ -17,38 +21,24 @@
 
 {% block content_main %}
     <h1>{{section.title}}</h1>
+
     <div>
         {{content|safe}}
     </div>
 
-    <nav class="section-nav" role="navigation">
-        <ul>
-            <li class="previous next-prev">
-                <a href="/eregulations/XXXXXXX" class="navigation-link backward next-prev-link"><span class="cf-icon cf-icon-left"></span><span class="next-prev-label">Previous section - </span>§&nbsp;XXXX.X </a> <span class="next-prev-title">Authority, scope and purpose.</span>
-            </li>
-            <li class="next next-prev">
-                <a href="/eregulations/XXXXXXX" class="navigation-link forward next-prev-link"><span class="cf-icon cf-icon-right"></span><span class="next-prev-label">Next section - </span>§&nbsp;XXXX.X</a> <span class="next-prev-title">Limited exceptions for certain classes of transactions.</span>
-            </li>
-        </ul>
-    </nav>
+    <div class="block block__sub">
+        <nav class="section-nav" role="navigation">
+            <ul>
+                <li class="previous next-prev">
+                    <a href="/eregulations/XXXXXXX" class="navigation-link backward next-prev-link"><span class="cf-icon cf-icon-left"></span><span class="next-prev-label">Previous section - </span>§&nbsp;XXXX.X </a> <span class="next-prev-title">Authority, scope and purpose.</span>
+                </li>
+                <li class="next next-prev">
+                    <a href="/eregulations/XXXXXXX" class="navigation-link forward next-prev-link"><span class="cf-icon cf-icon-right"></span><span class="next-prev-label">Next section - </span>§&nbsp;XXXX.X</a> <span class="next-prev-title">Limited exceptions for certain classes of transactions.</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
     {{ search_bar.render( 'left' ) }}
-
-    {% if page.sidefoot %}
-        <aside class="o-prefooter">
-            {{ streamfield_sidefoot.render(page.sidefoot, half_width=true) }}
-        </aside>
-    {% endif %}
-
-    <aside class="content_sidebar content__flush-top-on-small
-    content__flush-sides-on-small">
-    <ul>
-        {% for link in sibling_links %}
-        <li>
-            <a href="{{link.url}}">{{link.text}}</a>
-        </li>
-        {% endfor %}
-    </ul>
-    </aside>
 
 {% endblock %}
