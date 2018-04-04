@@ -74,8 +74,10 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
     def get_context(self, request, *args, **kwargs):
         context = super(CFGOVPage, self).get_context(request, *args, **kwargs)
-        context.update({'get_secondary_nav_items': get_reg_nav_items})
-        context.update({'regulation': self.regulation})
+        context.update({
+            'get_secondary_nav_items': get_reg_nav_items,
+            'regulation': self.regulation,
+        })
         return context
 
     @route(r'^(?P<section_label>[0-9A-Za-z-]+)/$')
@@ -88,11 +90,11 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
         context = self.get_context(request)
         context.update({
             # 'part': part.get_effective_version(),
+            'get_secondary_nav_items': get_reg_nav_items,
             'subpart': Subpart.objects.get(
                 label=section_label.replace('-', '.')),
             'section': Section.objects.get(label=section_label),
             'content': regdown(section.contents),
-            'get_secondary_nav_items': get_reg_nav_items
         })
 
         return TemplateResponse(
@@ -102,16 +104,13 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
 
 def get_reg_nav_items(request, current_page):
+    current_label = [bit for bit in request.url.split('/') if bit][-1]
     return [
         {
             'title': gathered_section.title,
             'url': '/eregulations3k/{}/{}/'.format(
                 current_page.regulation.part_number, gathered_section.label),
-            'active': (
-                # current_page.section.label == gathered_section.label
-                # if current_page.section else False),
-                False if not hasattr(current_page, 'section')
-                else current_page.section.label == gathered_section.label),
+            'active': gathered_section.label == current_label,
             'expanded': True
         }
         for gathered_section in Section.objects.filter(
