@@ -2,6 +2,7 @@
 
 {% import 'form_block.html' as form_block with context %}
 {% import 'organisms/featured-content.html' as featured_content %}
+{% import 'regulations3k/regulations3k-search-bar.html' as search_bar with context %}
 {% import 'templates/render_block.html' as render_block with context %}
 {% import 'templates/streamfield-sidefoot.html' as streamfield_sidefoot with context %}
 
@@ -9,11 +10,29 @@
     {{ super() }} content__flush-bottom
 {%- endblock %}
 
+{% block css -%}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ static('apps/regulations3k/css/main.css') }}">
+{%- endblock css %}
+
 {% block content_main %}
     <h1>{{section.title}}</h1>
     <div>
         {{content|safe}}
     </div>
+
+    <nav class="section-nav" role="navigation">
+        <ul>
+            <li class="previous next-prev">
+                <a href="/eregulations/XXXXXXX" class="navigation-link backward next-prev-link"><span class="cf-icon cf-icon-left"></span><span class="next-prev-label">Previous section - </span>§&nbsp;XXXX.X </a> <span class="next-prev-title">Authority, scope and purpose.</span>
+            </li>
+            <li class="next next-prev">
+                <a href="/eregulations/XXXXXXX" class="navigation-link forward next-prev-link"><span class="cf-icon cf-icon-right"></span><span class="next-prev-label">Next section - </span>§&nbsp;XXXX.X</a> <span class="next-prev-title">Limited exceptions for certain classes of transactions.</span>
+            </li>
+        </ul>
+    </nav>
+
+    {{ search_bar.render( 'left' ) }}
 
     {% if page.sidefoot %}
         <aside class="o-prefooter">
