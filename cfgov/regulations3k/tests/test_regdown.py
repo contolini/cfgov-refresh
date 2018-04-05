@@ -10,7 +10,7 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         text = '{my-label} This is a paragraph with a label.'
         self.assertEqual(
             regdown(text),
-            '<p id="my-label">This is a paragraph with a label.</p>'
+            '<p class="level-1" id="my-label">This is a paragraph with a label.</p>'
         )
 
     def test_nolabel(self):
@@ -25,14 +25,14 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         text = '{my-label}\nThis is a paragraph with a label.'
         self.assertEqual(
             regdown(text),
-            '<p id="my-label">This is a paragraph with a label.</p>'
+            '<p class="level-1" id="my-label">This is a paragraph with a label.</p>'
         )
 
     def test_multiple_linebreaks_label(self):
         text = '{my-label}\n\nThis is a paragraph with a label.'
         self.assertEqual(
             regdown(text),
-            '<p id="my-label"></p>\n'
+            '<p class="level-1" id="my-label"></p>\n'
             '<p id="725445113243d57f132b6408fa8583122d2641e591a9001f04fcde08">'
             'This is a paragraph with a label.</p>'
         )
@@ -41,7 +41,7 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         text = '- {my-label} This is a paragraph in a list.'
         self.assertEqual(
             regdown(text),
-            '<ul>\n<li>\n<p id="my-label">This is a paragraph in a list.'
+            '<ul>\n<li>\n<p class="level-1" id="my-label">This is a paragraph in a list.'
             '</p>\n</li>\n</ul>'
         )
 
