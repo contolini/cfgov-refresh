@@ -44,6 +44,9 @@ class LabeledParagraphProcessor(ParagraphProcessor):
             label, text = match.group(1), match.group(2)
             p = util.etree.SubElement(parent, 'p')
             p.set('id', label)
+            level = label.count('-')
+            class_name = 'level-{}'.format(level)
+            p.set('class', class_name)
             p.text = text.lstrip()
 
         elif block.strip():
