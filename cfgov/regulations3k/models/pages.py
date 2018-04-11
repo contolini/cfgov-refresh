@@ -1,5 +1,8 @@
 from __future__ import absolute_import, unicode_literals
+from decimal import Decimal
+import re
 
+from django.core.paginator import Paginator
 from django.db import models
 from django.template.response import TemplateResponse
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
@@ -16,7 +19,6 @@ from regulations3k.models import Part, Subpart, Section
 from regulations3k.regdown import regdown
 from v1.models import CFGOVPage, CFGOVPageManager
 from v1.atomic_elements import molecules
-from v1.util.util import get_secondary_nav_items
 
 
 class RegulationLandingPage(CFGOVPage):
@@ -82,25 +84,38 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
     @route(r'^(?P<section_label>[0-9A-Za-z-]+)/$')
     def section_page(self, request, section_label):
-
-        self.template = 'regulations3k/browse-regulation.html'
-
-        # part = Part.objects.get(part_number=part_label)
         section = Section.objects.get(label=section_label)
+        self.template = 'regulations3k/browse-regulation.html'
+        paginator = Paginator(sorted_section_nav_list(section_label), 20)
         context = self.get_context(request)
         context.update({
             # 'part': part.get_effective_version(),
+            'content': regdown(section.contents),
             'get_secondary_nav_items': get_reg_nav_items,
+            'paginator': paginator,
+            'section': Section.objects.get(label=section_label),
             'subpart': Subpart.objects.get(
                 label=section_label.replace('-', '.')),
-            'section': Section.objects.get(label=section_label),
-            'content': regdown(section.contents),
         })
 
         return TemplateResponse(
             request,
             self.template,
             context)
+
+
+def sorted_section_nav_list(section_label):
+    numeric_check = re.compile('\d{4}\-(\d{1,2})')
+    part_label = section_label.partition('-')[0]
+    section_query = Section.objects.filter(label__startswith=part_label)
+    numeric_sections = sorted(
+        [sect for sect in section_query
+         if re.match(numeric_check, sect.label)],
+        key=lambda x: float(re.match(numeric_check, x.label).group(1)))
+    alpha_sections = sorted(
+        [sect for sect in section_query
+         if sect not in numeric_sections])
+    return numeric_sections + alpha_sections
 
 
 def get_reg_nav_items(request, current_page):
