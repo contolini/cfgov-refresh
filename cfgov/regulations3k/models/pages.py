@@ -1,5 +1,4 @@
 from __future__ import absolute_import, unicode_literals
-from decimal import Decimal
 import re
 
 from django.core.paginator import Paginator
@@ -86,7 +85,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
     def section_page(self, request, section_label):
         section = Section.objects.get(label=section_label)
         self.template = 'regulations3k/browse-regulation.html'
-        paginator = Paginator(sorted_section_nav_list(section_label), 20)
+        paginator = Paginator(sorted_section_nav_list(section_label), 100)
         context = self.get_context(request)
         context.update({
             # 'part': part.get_effective_version(),

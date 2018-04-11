@@ -92,7 +92,10 @@ class Part(models.Model):
     ]
 
     def __str__(self):
-        return self.cfr_title
+        name = "12 CFR Part {}".format(self.part_number)
+        if self.letter_code:
+            name += " (Regulation {})".format(self.letter_code)
+        return name
 
     class Meta:
         ordering = ['letter_code']
