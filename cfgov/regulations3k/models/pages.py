@@ -14,7 +14,7 @@ from wagtail.wagtailcore.models import PageManager
 # Our RegDownTextField field doesn't generate a good widget yet
 # from regulations3k.models.fields import RegDownTextField
 from ask_cfpb.models.pages import SecondaryNavigationJSMixin
-from regulations3k.models import Part, Subpart, Section
+from regulations3k.models import Part, Section  # , Subpart
 from regulations3k.regdown import regdown
 from v1.models import CFGOVPage, CFGOVPageManager
 from v1.atomic_elements import molecules
@@ -93,8 +93,6 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
             'get_secondary_nav_items': get_reg_nav_items,
             'paginator': paginator,
             'section': Section.objects.get(label=section_label),
-            'subpart': Subpart.objects.get(
-                label=section_label.replace('-', '.')),
         })
 
         return TemplateResponse(

@@ -65,8 +65,8 @@ class EffectiveVersion(models.Model):
     ]
 
     def __str__(self):
-        return "{} {} ({})".format(
-            self.part, self.subparts, self.effective_date)
+        return "{}, effective {}".format(
+            self.part, self.effective_date)
 
     class Meta:
         ordering = ['effective_date']
@@ -100,8 +100,8 @@ class Part(models.Model):
     class Meta:
         ordering = ['letter_code']
 
-    def get_parts_with_effective_version(self):
-        pass
+    # def get_parts_with_effective_version(self):
+    #     pass
 
-    def get_current_effective_version(self):
-        pass
+    # def get_current_effective_version(self):
+    #     pass
