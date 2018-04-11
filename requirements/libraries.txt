@@ -28,7 +28,6 @@ lxml==4.1.0
 Markdown==2.6.11
 ntplib==0.3.3
 openpyxl==2.5.0
-pbr==1.9.1
 psycopg2==2.7.3.2
 pyelasticsearch==0.6.1
 python-dateutil==2.1
