@@ -36,7 +36,7 @@ class SectionModelAdmin(ModelAdmin):
         'label',
         'title')
     search_fields = (
-        'label', 'title', 'contents')
+        'label', 'title')
     # list_filter = ('label',)
 
 
