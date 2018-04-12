@@ -34,6 +34,7 @@ class SectionModelAdmin(ModelAdmin):
     menu_icon = 'list-ul'
     list_display = (
         'label',
+        'subpart',
         'title')
     search_fields = (
         'label', 'title')
@@ -46,7 +47,6 @@ class EffectiveVersionModelAdmin(ModelAdmin):
     menu_icon = 'list-ul'
     list_display = (
         'part',
-        'subparts',
         'effective_date')
     list_filter = ('effective_date', 'part')
 
