@@ -109,7 +109,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 def sorted_section_nav_list(version):
     numeric_check = re.compile('\d{4}\-(\d{1,2})')
     section_query = Section.objects.filter(
-        subpart__version=version,
+        subpart__version=version
     )
     numeric_sections = sorted(
         [sect for sect in section_query
