@@ -23,13 +23,12 @@ from v1.atomic_elements import molecules
 class RegulationLandingPage(CFGOVPage):
     """landing page for eregs"""
     objects = CFGOVPageManager()
-    regs = Part.objects.exclude(letter_code='DD')
+    regs = Part.objects.order_by('part_number')
 
     def get_context(self, request, *args, **kwargs):
         context = super(CFGOVPage, self).get_context(request, *args, **kwargs)
         context.update({
             'regs': self.regs,
-            'dd': Part.objects.get(letter_code='DD')
         })
         return context
 
@@ -107,7 +106,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
 
 def sorted_section_nav_list(version):
-    numeric_check = re.compile('\d{4}\-(\d{1,2})')
+    numeric_check = re.compile('\d{1,2}')
     section_query = Section.objects.filter(
         subpart__version=version
     )
