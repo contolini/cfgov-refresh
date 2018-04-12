@@ -83,16 +83,21 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
     @route(r'^(?P<section_label>[0-9A-Za-z-]+)/$')
     def section_page(self, request, section_label):
-        section = Section.objects.get(label=section_label)
+        section = Section.objects.filter(
+            subpart__version=self.regulation.effective_version,
+        ).get(label=section_label)
         self.template = 'regulations3k/browse-regulation.html'
-        paginator = Paginator(sorted_section_nav_list(section_label), 100)
+        paginator = Paginator(
+            sorted_section_nav_list(self.regulation.effective_version),
+            100
+        )
         context = self.get_context(request)
         context.update({
-            # 'part': part.get_effective_version(),
+            'version': self.regulation.effective_version,
             'content': regdown(section.contents),
             'get_secondary_nav_items': get_reg_nav_items,
             'paginator': paginator,
-            'section': Section.objects.get(label=section_label),
+            'section': section,
         })
 
         return TemplateResponse(
@@ -101,10 +106,11 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
             context)
 
 
-def sorted_section_nav_list(section_label):
+def sorted_section_nav_list(version):
     numeric_check = re.compile('\d{4}\-(\d{1,2})')
-    part_label = section_label.partition('-')[0]
-    section_query = Section.objects.filter(label__startswith=part_label)
+    section_query = Section.objects.filter(
+        subpart__version=version
+    )
     numeric_sections = sorted(
         [sect for sect in section_query
          if re.match(numeric_check, sect.label)],
@@ -126,5 +132,6 @@ def get_reg_nav_items(request, current_page):
             'expanded': True
         }
         for gathered_section in Section.objects.filter(
-            label__startswith=current_page.regulation.part_number)
+            subpart__version=current_page.regulation.effective_version
+        )
     ], True
