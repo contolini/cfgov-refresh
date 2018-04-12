@@ -2,10 +2,10 @@
 # from django.views.generic import TemplateView
 
 
-# urlpatterns = [
+urlpatterns = [
 #     url(
 #         r'^$',
 #         TemplateView.as_view(template_name='regulations3k/base.html'),
 #         name='regulations_base'
 #     ),
-# ]
+]

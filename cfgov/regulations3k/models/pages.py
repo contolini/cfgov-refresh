@@ -38,7 +38,7 @@ class RegulationLandingPage(CFGOVPage):
 
 
 class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
-    """A routable page for serving an eregulations page by subpart ID"""
+    """A routable page for serving an eregulations page by Section ID"""
 
     objects = PageManager()
 
