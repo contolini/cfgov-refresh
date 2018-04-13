@@ -110,7 +110,6 @@ class RegModelTests(DjangoTestCase):
     def test_landing_page_get_context(self):
         test_context = self.landing_page.get_context(HttpRequest())
         self.assertIn(self.part_1002, test_context['regs'])
-        self.assertEqual(self.part_1030, test_context['dd'])
 
     def test_landing_page_get_template(self):
         self.assertEqual(
@@ -141,5 +140,5 @@ class RegModelTests(DjangoTestCase):
 
     def test_routable_page_view(self):
         response = self.reg_page.section_page(
-            HttpRequest(), section_label='1002-4')
+            HttpRequest(), section='4')
         self.assertEqual(response.status_code, 200)

@@ -86,7 +86,8 @@ class Subpart(models.Model):
     ]
 
     def __str__(self):
-        return "{} {}, effective {}".format(self.label, self.title, self.version.effective_date)
+        return "{} {}, effective {}".format(
+            self.label, self.title, self.version.effective_date)
 
     class Meta:
         ordering = ['label']
@@ -111,3 +112,18 @@ class Section(models.Model):
 
     class Meta:
         ordering = ['label']
+
+    @property
+    def numeric_label(self):
+        part, number = self.label.split('-')
+        return '\xa7\xa0{}.{}'.format(part, number)
+
+    @property
+    def section_number(self):
+        part, number = self.label.split('-')
+        return number
+
+    @property
+    def title_content(self):
+        part, number = self.label.split('-')
+        return self.title.replace(self.numeric_label, '')

@@ -1,7 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 import re
 
-from django.core.paginator import Paginator
 from django.db import models
 from django.template.response import TemplateResponse
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
@@ -80,22 +79,26 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
         })
         return context
 
-    @route(r'^(?P<section_label>[0-9A-Za-z-]+)/$')
-    def section_page(self, request, section_label):
+    @route(r'^(?P<section>[0-9A-Za-z-]+)/$')
+    def section_page(self, request, section):
+        section_label = "{}-{}".format(
+            self.regulation.part_number, section)
         section = Section.objects.filter(
             subpart__version=self.regulation.effective_version,
         ).get(label=section_label)
         self.template = 'regulations3k/browse-regulation.html'
-        paginator = Paginator(
-            sorted_section_nav_list(self.regulation.effective_version),
-            100
-        )
+        sibling_sections = sorted_section_nav_list(
+            self.regulation.effective_version)
+        current_index = sibling_sections.index(section)
         context = self.get_context(request)
         context.update({
             'version': self.regulation.effective_version,
             'content': regdown(section.contents),
             'get_secondary_nav_items': get_reg_nav_items,
-            'paginator': paginator,
+            'next_section': get_next_section(
+                sibling_sections, current_index),
+            'previous_section': get_previous_section(
+                sibling_sections, current_index),
             'section': section,
         })
 
@@ -105,32 +108,51 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
             context)
 
 
+def get_next_section(section_list, current_index):
+    if current_index == len(section_list) - 1:
+        return None
+    else:
+        return section_list[current_index + 1]
+
+
+def get_previous_section(section_list, current_index):
+    if current_index == 0:
+        return None
+    else:
+        return section_list[current_index - 1]
+
+
 def sorted_section_nav_list(version):
-    numeric_check = re.compile('\d{1,2}')
+    numeric_check = re.compile('\d{4}\-(\d{1,2})')
     section_query = Section.objects.filter(
         subpart__version=version
     )
-    numeric_sections = sorted(
+    numeric_sections = [sect for sect in section_query
+                        if re.match(numeric_check, sect.label)]
+    numeric_sorted = sorted(
+        numeric_sections, key=lambda x: int(x.section_number))
+    alpha_sorted = sorted(
         [sect for sect in section_query
-         if re.match(numeric_check, sect.label)],
-        key=lambda x: float(re.match(numeric_check, x.label).group(1)))
-    alpha_sections = sorted(
-        [sect for sect in section_query
-         if sect not in numeric_sections])
-    return numeric_sections + alpha_sections
+         if sect not in numeric_sections], key=lambda x: x.title)
+    return numeric_sorted + alpha_sorted
 
 
 def get_reg_nav_items(request, current_page):
-    current_label = [bit for bit in request.url.split('/') if bit][-1]
+    version = current_page.regulation.effective_version
+    url_bits = [bit for bit in request.url.split('/') if bit]
+    current_label = url_bits[-1]
+    current_part = current_page.regulation.part_number
     return [
         {
             'title': gathered_section.title,
             'url': '/eregulations3k/{}/{}/'.format(
-                current_page.regulation.part_number, gathered_section.label),
-            'active': gathered_section.label == current_label,
+                current_part,
+                gathered_section.label.split('-')[-1]),
+            'active': gathered_section.label == '{}-{}'.format(
+                current_part,
+                current_label),
             'expanded': True
         }
-        for gathered_section in Section.objects.filter(
-            subpart__version=current_page.regulation.effective_version
-        )
+        for gathered_section
+        in sorted_section_nav_list(version)
     ], True
