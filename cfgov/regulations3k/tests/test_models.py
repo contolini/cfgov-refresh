@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import datetime
+import sys
 
 # import mock
 # from bs4 import BeautifulSoup as bs
@@ -98,9 +99,14 @@ class RegModelTests(DjangoTestCase):
             '1002 , effective 2014-01-18')
 
     def test_section_string_method(self):
-        self.assertEqual(
-            self.section_num4.__str__(),
-            '1002-4 \xa7 1002.4 General rules.'.encode('utf8'))
+        if sys.version_info >= (3, 0):
+            self.assertEqual(
+                self.section_num4.__str__(),
+                '1002-4 \xa7 1002.4 General rules.')
+        else:
+            self.assertEqual(
+                self.section_num4.__str__(),
+                '1002-4 \xa7 1002.4 General rules.'.encode('utf8'))
 
     def test_effective_version_string_method(self):
         self.assertEqual(

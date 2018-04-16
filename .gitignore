@@ -104,6 +104,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 .snyk
+.python-version
 
 # IDE Specifc #
 ###############
