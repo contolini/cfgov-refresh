@@ -27,6 +27,7 @@ class RegulationLandingPage(CFGOVPage):
     def get_context(self, request, *args, **kwargs):
         context = super(CFGOVPage, self).get_context(request, *args, **kwargs)
         context.update({
+            'get_secondary_nav_items': get_reg_nav_items,
             'regs': self.regs,
         })
         return context
@@ -40,7 +41,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
 
     objects = PageManager()
 
-    template = 'browse-basic/index.html'
+    template = 'regulations3k/browse-regulation.html'
 
     header = StreamField([
         ('text_introduction', molecules.TextIntroduction()),
@@ -76,6 +77,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
         context.update({
             'get_secondary_nav_items': get_reg_nav_items,
             'regulation': self.regulation,
+            'section': None,
         })
         return context
 
@@ -86,7 +88,6 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
         section = Section.objects.filter(
             subpart__version=self.regulation.effective_version,
         ).get(label=section_label)
-        self.template = 'regulations3k/browse-regulation.html'
         sibling_sections = sorted_section_nav_list(
             self.regulation.effective_version)
         current_index = sibling_sections.index(section)
@@ -151,7 +152,8 @@ def get_reg_nav_items(request, current_page):
             'active': gathered_section.label == '{}-{}'.format(
                 current_part,
                 current_label),
-            'expanded': True
+            'expanded': True,
+            'section': gathered_section,
         }
         for gathered_section
         in sorted_section_nav_list(version)

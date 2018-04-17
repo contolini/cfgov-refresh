@@ -1,8 +1,8 @@
-{% extends 'layout-side-nav.html' %}
+{% extends 'eregs/regulations3k-side-nav.html' %}
 
 {% import 'form_block.html' as form_block with context %}
 {% import 'organisms/featured-content.html' as featured_content %}
-{% import 'regulations3k/regulations3k-search-bar.html' as search_bar with context %}
+{% import 'eregs/regulations3k-search-bar.html' as search_bar with context %}
 {% import 'templates/render_block.html' as render_block with context %}
 {% import 'templates/streamfield-sidefoot.html' as streamfield_sidefoot with context %}
 
@@ -20,12 +20,26 @@
 {%- endblock css %}
 
 {% block content_main %}
+    {% if section %}
     <h1>{{section.title}}</h1>
 
     <section class="block block__flush-top">
         {{content|safe}}
     </section>
-
+    {% else %}
+    {% for block in page.header -%}
+        {% if 'featured_content' in block.block_type %}
+            <div class="block
+                        block__flush-sides
+                        block__border">
+                {{ featured_content.render(block.value) }}
+            </div>
+        {% else %}
+            {{ render_block.render(block, loop.index) }}
+        {% endif %}
+    {%- endfor %}
+    {% endif %}
+    {% if section %}
     <div class="block block__sub">
         <nav class="section-nav" role="navigation">
             <ul>
@@ -42,5 +56,6 @@
             </ul>
         </nav>
     </div>
+    {% endif %}
 
 {% endblock %}

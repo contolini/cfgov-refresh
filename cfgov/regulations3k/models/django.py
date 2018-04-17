@@ -33,7 +33,7 @@ class Part(models.Model):
         return name
 
     class Meta:
-        ordering = ['letter_code']
+        ordering = ['part_number']
 
     # def get_parts_with_effective_version(self):
     #     pass
@@ -41,8 +41,8 @@ class Part(models.Model):
     @cached_property
     def effective_version(self):
         """ Return the current effective version of the regulation.
-        This selects based on effective_date being less than the current
-        date. """
+        This selects based on effective_date being less than or equal to
+        the current date. """
         effective_version = self.versions.filter(
             effective_date__lte=datetime.now()
         ).order_by(
@@ -88,6 +88,30 @@ class Subpart(models.Model):
     def __str__(self):
         return "{} {}, effective {}".format(
             self.label, self.title, self.version.effective_date)
+
+    @property
+    def subpart_heading(self):
+        if 'ppend' in self.label:
+            return ''
+        if len(self.label.split('-')) > 1:
+            return "SUBPART {} - ".format(self.label.split('-')[1])
+        else:
+            return ''
+
+    @property
+    def section_range(self):
+        if not self.sections:
+            return ''
+        if self.sections.first().section_number.isdigit():
+            sections = sorted(
+                self.sections.all(), key=lambda x: int(x.section_number))
+            return "{}–{}".format(
+                sections[0].numeric_label, sections[-1].numeric_label)
+        else:
+            sections = sorted(
+                self.sections.all(), key=lambda x: x.section_number)
+            return "{}–{}".format(
+                sections[0].label, sections[-1].label)
 
     class Meta:
         ordering = ['label']
