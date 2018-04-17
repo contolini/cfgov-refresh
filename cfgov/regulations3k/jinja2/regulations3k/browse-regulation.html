@@ -43,19 +43,35 @@
     <div class="block block__sub">
         <nav class="section-nav" role="navigation">
             <ul>
+                {% if previous_section %}
                 <li class="previous next-prev">
-                    {% if previous_section %}
                     <a href="/eregulations3k/{{regulation.part_number}}/{{previous_section.section_number}}" class="navigation-link backward next-prev-link"><span class="cf-icon cf-icon-left"></span><span class="next-prev-label">Previous section - </span>{{previous_section.numeric_label}}</a> <span class="next-prev-title">{{previous_section.title_content}}</span>
-                    {% endif %}
                 </li>
+                {% endif %}
+                {% if next_section %}
                 <li class="next next-prev">
-                    {% if next_section %}
                     <a href="/eregulations3k/{{regulation.part_number}}/{{next_section.section_number}}" class="navigation-link forward next-prev-link"><span class="cf-icon cf-icon-right"></span><span class="next-prev-label">Next section - </span>{{next_section.numeric_label}}</a> <span class="next-prev-title">{{next_section.title_content}}</span>
-                    {% endif %}
                 </li>
+                {% endif %}
             </ul>
         </nav>
     </div>
     {% endif %}
 
 {% endblock %}
+
+{% block javascript scoped %}
+    {{ super() }}
+    <script async>
+      if ( document.body.parentElement.className.indexOf( 'no-js' ) === -1 ) {
+        !function(){
+          {# Include site-wide JavaScript. #}
+          var s = [
+            '{{ static('apps/regulations3k/js/common.js') }}',
+            '{{ static('apps/regulations3k/js/index.js') }}'
+          ];
+          jsl(s);
+        }()
+      }
+    </script>
+{% endblock javascript %}
