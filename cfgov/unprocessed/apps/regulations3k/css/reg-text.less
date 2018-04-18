@@ -12,6 +12,7 @@ p[id] em {
 
 .generateLevel(@n, @i: 1) when (@i =< @n) {
   .level-@{i} {
+    box-sizing: border-box;
     padding-left: (@i * 2em);
   }
   .generateLevel(@n, (@i + 1));
