@@ -12,19 +12,24 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 
 @python_2_unicode_compatible
 class Part(models.Model):
-    cfr_title = models.CharField(max_length=255)
+    cfr_title_number = models.CharField(max_length=255)
     chapter = models.CharField(max_length=255)
     part_number = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     letter_code = models.CharField(max_length=10)
 
     panels = [
-        FieldPanel('cfr_title'),
+        FieldPanel('cfr_title_number'),
         FieldPanel('title'),
         FieldPanel('part_number'),
         FieldPanel('letter_code'),
         FieldPanel('chapter'),
     ]
+
+    @property
+    def cfr_title(self):
+        return "{} CFR Part {} (Regulation {})".format(
+            self.cfr_title_number, self.part_number, self.letter_code)
 
     def __str__(self):
         name = "12 CFR Part {}".format(self.part_number)

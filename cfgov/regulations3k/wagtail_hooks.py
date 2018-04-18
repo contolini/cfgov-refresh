@@ -11,7 +11,6 @@ class PartModelAdmin(ModelAdmin):
     menu_label = 'Regulation part'
     menu_icon = 'list-ul'
     list_display = (
-        'cfr_title',
         'title',
         'part_number',
         'letter_code')
