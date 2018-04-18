@@ -148,7 +148,7 @@ def get_reg_nav_items(request, current_page):
             'title': gathered_section.title,
             'url': '/eregulations3k/{}/{}/'.format(
                 current_part,
-                gathered_section.label.split('-')[-1]),
+                gathered_section.label.partition('-')[-1]),
             'active': gathered_section.label == '{}-{}'.format(
                 current_part,
                 current_label),

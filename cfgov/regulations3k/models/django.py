@@ -99,13 +99,19 @@ class Subpart(models.Model):
         if 'ppend' in self.label:
             return ''
         if len(self.label.split('-')) > 1:
-            return "SUBPART {} - ".format(self.label.split('-')[1])
+            return ''
         else:
             return ''
 
     @property
     def section_range(self):
         if not self.sections:
+            return ''
+        if 'ppend' in self.sections.first().label:
+            return ''
+        if 'Interp' in self.sections.first().label:
+            return ''
+        if 'Appendices' in self.sections.first().label:
             return ''
         if self.sections.first().section_number.isdigit():
             sections = sorted(
@@ -144,15 +150,18 @@ class Section(models.Model):
 
     @property
     def numeric_label(self):
-        part, number = self.label.split('-')
-        return '\xa7\xa0{}.{}'.format(part, number)
+        part, number = self.label.split('-')[:2]
+        if number.isdigit():
+            return '\xa7\xa0{}.{}'.format(part, number)
+        else:
+            return ''
 
     @property
     def section_number(self):
-        part, number = self.label.split('-')
+        part, number = self.label.split('-')[:2]
         return number
 
     @property
     def title_content(self):
-        part, number = self.label.split('-')
+        part, number = self.label.split('-')[:2]
         return self.title.replace(self.numeric_label, '')

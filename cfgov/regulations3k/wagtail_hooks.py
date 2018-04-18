@@ -37,7 +37,7 @@ class SectionModelAdmin(ModelAdmin):
         'title')
     search_fields = (
         'label', 'title')
-    # list_filter = ('label',)
+    list_filter = ('subpart__version__part__letter_code',)
 
 
 class EffectiveVersionModelAdmin(ModelAdmin):
