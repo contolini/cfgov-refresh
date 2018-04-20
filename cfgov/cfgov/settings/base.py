@@ -697,3 +697,11 @@ EMAIL_POPUP_URLS = {
         '/owning-a-home/mortgage-estimate/',
     ],
 }
+
+REGULATIONS_REFERENCE_MAPPING = [
+    (
+    	r'(?P<label>(?P<section>[\w]+))-(?P<paragraph>[\w-]*-Interp)',
+    	'Interp-{section}',
+    	'{paragraph}'
+    ),
+]

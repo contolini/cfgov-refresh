@@ -89,20 +89,23 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
         section = Section.objects.filter(
             subpart__version=self.regulation.effective_version,
         ).get(label=section_label)
+        content = regdown(
+            section.contents,
+            contents_resolver=get_contents_resolver(section)
+        )
         sibling_sections = sorted_section_nav_list(
             self.regulation.effective_version)
         current_index = sibling_sections.index(section)
         context = self.get_context(request)
         context.update({
             'version': self.regulation.effective_version,
-            'content': regdown(section.contents),
+            'content': content,
             'get_secondary_nav_items': get_reg_nav_items,
             'next_section': get_next_section(
                 sibling_sections, current_index),
             'previous_section': get_previous_section(
                 sibling_sections, current_index),
             'section': section,
-            'contents_resolver': get_contents_resolver(section)
         })
 
         return TemplateResponse(
