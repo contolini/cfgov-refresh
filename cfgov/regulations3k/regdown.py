@@ -112,7 +112,7 @@ class BlockReferencePreprocessor(Preprocessor):
                 label = match.group('label')
                 contents = self.contents_resolver(label)
                 quoted_contents = ''.join(
-                    ['> ' + line for line in contents.splitlines(True)]
+                    ['> ' + l for l in contents.splitlines(True)]
                 )
                 new_lines.append(quoted_contents)
             else:

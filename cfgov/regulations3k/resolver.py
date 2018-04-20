@@ -18,12 +18,11 @@ def resolve_reference(reference):
         if match:
             match_section = match.group('section')
             match_paragraph = match.group('paragraph')
-            dest_section_label = reference_map[1].format(section=match_section)
-            dest_paragraph_label = reference_map[2].format(
-                section=match_section, paragraph=match_paragraph)
+            dest_section_label = reference_map[1].format(**match.groupdict())
+            dest_paragraph_label = reference_map[2].format(**match.groupdict())
             return (dest_section_label, dest_paragraph_label)
 
-    return None, None
+    return (None, None)
 
 
 def get_contents_resolver(section):
@@ -34,11 +33,14 @@ def get_contents_resolver(section):
     section_query = Section.objects.filter(
         subpart__version=section.subpart.version,
     )
+
     def contents_resolver(reference):
         dest_section_label, dest_paragraph_label = resolve_reference(reference)
+        print(dest_section_label, dest_paragraph_label)
         try:
             dest_section = section_query.get(label=dest_section_label)
         except Section.DoesNotExist:
+            print(dest_section_label, "does not exist")
             return ''
         dest_paragraph = extract_labeled_paragraph(
             dest_paragraph_label, dest_section.contents)
