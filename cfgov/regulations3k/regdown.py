@@ -47,6 +47,7 @@ class RegulationsExtension(Extension):
         # `{label}` syntax and gives default hash-based ids to paragraphs
         md.parser.blockprocessors['paragraph'] = \
             LabeledParagraphProcessor(md.parser)
+        del md.parser.blockprocessors['olist']
 
 
 class LabeledParagraphProcessor(ParagraphProcessor):
