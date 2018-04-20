@@ -15,6 +15,7 @@ from wagtail.wagtailcore.models import PageManager
 from ask_cfpb.models.pages import SecondaryNavigationJSMixin
 from regulations3k.models import Part, Section  # , Subpart
 from regulations3k.regdown import regdown
+from regulations3k.resolvers import get_contents_resolver
 from v1.models import CFGOVPage, CFGOVPageManager
 from v1.atomic_elements import molecules
 
@@ -101,6 +102,7 @@ class RegulationPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
             'previous_section': get_previous_section(
                 sibling_sections, current_index),
             'section': section,
+            'contents_resolver': get_contents_resolver(section)
         })
 
         return TemplateResponse(
@@ -158,3 +160,6 @@ def get_reg_nav_items(request, current_page):
         for gathered_section
         in sorted_section_nav_list(version)
     ], True
+
+
+

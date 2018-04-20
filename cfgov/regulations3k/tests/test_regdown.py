@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import unittest
 
 import markdown
-from regulations3k.regdown import regdown
+from regulations3k.regdown import regdown, extract_labeled_paragraph
 
 
 class RegulationsExtensionTestCase(unittest.TestCase):
@@ -10,7 +13,8 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         text = '{my-label} This is a paragraph with a label.'
         self.assertEqual(
             regdown(text),
-            '<p class="level-1" id="my-label">This is a paragraph with a label.</p>'
+            '<p class="level-1" id="my-label">'
+            'This is a paragraph with a label.</p>'
         )
 
     def test_nolabel(self):
@@ -25,7 +29,8 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         text = '{my-label}\nThis is a paragraph with a label.'
         self.assertEqual(
             regdown(text),
-            '<p class="level-1" id="my-label">This is a paragraph with a label.</p>'
+            '<p class="level-1" id="my-label">'
+            'This is a paragraph with a label.</p>'
         )
 
     def test_multiple_linebreaks_label(self):
@@ -41,7 +46,8 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         text = '- {my-label} This is a paragraph in a list.'
         self.assertEqual(
             regdown(text),
-            '<ul>\n<li>\n<p class="level-1" id="my-label">This is a paragraph in a list.'
+            '<ul>\n<li>\n<p class="level-1" id="my-label">'
+            'This is a paragraph in a list.'
             '</p>\n</li>\n</ul>'
         )
 
@@ -52,3 +58,37 @@ class RegulationsExtensionTestCase(unittest.TestCase):
         except AttributeError as e:
             self.fail('Markdown failed to load regdown extension: '
                       '{}'.format(e.message))
+
+    def test_block_reference_no_resolver(self):
+        text = 'see(foo-bar)'
+        self.assertEqual(regdown(text), '')
+
+    def test_block_reference(self):
+        contents_resolver = lambda l: '{foo-bar}\n# §FooBar\n\n'
+        text = 'see(foo-bar)'
+        self.assertIn('<h1>§FooBar</h1>',
+                      regdown(text, contents_resolver=contents_resolver))
+
+
+class RegdownUtilsTestCase(unittest.TestCase):
+
+    def test_extract_labeled_paragraph(self):
+        text = (
+            '{first-label} First para\n\n'
+            '{my-label} Second para\n\n'
+            'Third para\n\n'
+            '{next-label}Fourth para'
+        )
+        my_labeled_para = extract_labeled_paragraph('my-label', text)
+        self.assertEqual(
+            my_labeled_para,
+            '{my-label} Second para\n\nThird para\n\n'
+        )
+
+    def test_extract_labeled_paragraph_not_found(self):
+        text = (
+            '{another-label} First para\n\n'
+            '{next-label}Fourth para'
+        )
+        my_labeled_para = extract_labeled_paragraph('my-label', text)
+        self.assertEqual(my_labeled_para, '')
