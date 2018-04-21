@@ -19,6 +19,8 @@
     {% if next_section %}
     <link rel="prerender" href="/eregulations3k/{{regulation.part_number}}/{{next_section.section_number}}/">
     {% endif %}
+    <link rel="manifest" href="{{ static('apps/regulations3k/eregs-manifest.json') }}">
+    <meta name="theme-color" content="#20aa3f">
 {%- endblock %}
 
 {% block css -%}
@@ -68,13 +70,11 @@
 {% endblock %}
 
 {% block javascript scoped %}
-    {{ super() }}
     <script async>
       if ( document.body.parentElement.className.indexOf( 'no-js' ) === -1 ) {
         !function(){
           {# Include site-wide JavaScript. #}
           var s = [
-            '{{ static('apps/regulations3k/js/common.js') }}',
             '{{ static('apps/regulations3k/js/index.js') }}'
           ];
           jsl(s);

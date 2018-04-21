@@ -17,5 +17,11 @@
   },
   "dependencies": {
     "amortize": "0.2.2"
+  },
+  "devDependencies": {
+    "sw-precache-webpack-plugin": "^0.11.5"
+  },
+  "scripts": {
+    "build": "gulp scripts && npx contolini/sw-precache --config=sw-precache-config.json && cp service-worker.js ../../../regulations3k/jinja2/regulations3k/eregs-service-worker.js && cp manifest.json ../../../static_built/apps/regulations3k/eregs-manifest.json"
   }
 }
