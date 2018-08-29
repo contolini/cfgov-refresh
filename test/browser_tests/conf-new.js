@@ -1,4 +1,4 @@
-const environmentTest = require( './environment-test' );
+const environmentTest = require( './environment-test-new' );
 const envvars = require( '../../config/environment' ).envvars;
 const defaultSuites = require( './default-suites.js' );
 const minimist = require( 'minimist' );
@@ -248,7 +248,7 @@ function _onPrepare() {
 const config = {
   baseUrl:                  environmentTest.baseUrl,
   cucumberOpts: {
-    'require':   'cucumber/step_definitions/*.js',
+    'require':   'cucumber-new/step_definitions/**/*.js',
     'tags':      [ '~@mobile', '~@skip', '~@undefined' ],
     'profile':   false,
     'no-source': true,
