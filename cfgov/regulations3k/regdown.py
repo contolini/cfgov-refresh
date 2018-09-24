@@ -223,7 +223,8 @@ class LabeledParagraphProcessor(ParagraphProcessor):
                 label = sha3_224(text.encode('utf-8')).hexdigest()
                 class_name = 'regdown-block'
                 p = util.etree.SubElement(parent, 'p')
-                p.set('id', label)
+                # The HTML spec requires IDs to start with a letter
+                p.set('id', 'a' + label)
                 p.set('class', class_name)
 
                 p.text = text

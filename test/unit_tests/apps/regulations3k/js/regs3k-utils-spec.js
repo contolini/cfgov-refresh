@@ -1,5 +1,6 @@
 const BASE_JS_PATH = '../../../../../cfgov/unprocessed/apps/regulations3k';
 
+const simulateEvent = require( '../../../../util/simulate-event' ).simulateEvent;
 const utils = require( `${ BASE_JS_PATH }/js/regs3k-utils.js` );
 
 describe( 'The Regs3K search utils', () => {
