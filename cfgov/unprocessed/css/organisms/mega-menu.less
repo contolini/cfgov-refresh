@@ -157,6 +157,9 @@ body {
 
 .o-mega-menu {
 
+    // Left-align the mega menu items
+    left: unit( -16px / @base-font-size-px, em );
+
     &_heading {
         // Override h2 element styles.
         margin: 0;
@@ -861,7 +864,6 @@ body {
 
     // Xtra-Large desktop size. 1261px.
     .respond-to-min( @bp-xl-min + @grid_gutter-width, {
-        left: unit( -16px / @base-font-size-px, em );
         width: @menu_max_width_px;
 
         &_content-1 {
