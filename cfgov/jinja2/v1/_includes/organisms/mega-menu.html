@@ -148,9 +148,12 @@
                 {% if nav_item.featured_items or nav_item.other_items %}
                 <div class="{{ _classes( nav_depth, '-list' ) }} {{ _classes( nav_depth, '-list__featured' ) }} ">
                     {% if nav_item.featured_items %}
+                    <h4 class="h5 {{ base_class ~ '_group-heading' }}">
+                        Featured
+                    </h4>
                     <ul class="{{ _classes( nav_depth, '-list__featured-item' ) }}" aria-label="Featured">
                         {% for link in nav_item.featured_items | default( [], true ) %}
-                        <li>
+                        <li class="m-list_item {{ _classes( nav_depth, '-item' ) }}">
                             <a class="{{ _classes( nav_depth, '-link' ) }}"
                                href="{{ link.url }}">
                                 {{ svg_icon( 'favorite' ) }}
@@ -161,9 +164,13 @@
                     </ul>
                     {% endif %}
 
+                    {% if nav_item.other_items %}
+                    <h4 class="h5 {{ base_class ~ '_group-heading' }}">
+                        Additional Resources
+                    </h4>
                     <ul class="m-list m-list__unstyled">
                         {% for link in nav_item.other_items | default( [], true ) %}
-                        <li>
+                        <li class="m-list_item {{ _classes( nav_depth, '-item' ) }}">
                             <a class="a-link {{ _classes( nav_depth, '-link' ) }}"
                                href="{{ link.url }}">
                                 {{ svg_icon( link.icon ) }}
@@ -172,6 +179,7 @@
                         </li>
                         {% endfor %}
                     </ul>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>

@@ -450,10 +450,6 @@ body {
         // 2nd-level menu - Tablet/Mobile.
         &_content-2 {
 
-            &-list__featured-item {
-                display: none;
-            }
-
             // TODO: Enable or delete when non-clickable
             //       current page link is in.
             //       The problem is sections with a 3rd
@@ -469,10 +465,12 @@ body {
             //    }
             // }
 
-            // Remove final border line of last list item.
+            // Remove last bottom border of last list item of the last list.
             &-list:last-child {
-                .o-mega-menu_content-2-item:last-child {
-                    border-bottom: none;
+                ul:last-child {
+                    .o-mega-menu_content-2-item:last-child {
+                        border-bottom: none;
+                    }
                 }
             }
         }
@@ -498,6 +496,10 @@ body {
             top: -1px;
             z-index: 10;
 
+            &-list {
+                padding-left: 0;
+            }
+
             &-grid {
                 padding-left: unit( @grid_gutter-width / 2 / 18px, em );
                 padding-right: unit( @grid_gutter-width / 2 / @base-font-size-px, em );
@@ -506,7 +508,8 @@ body {
 
         // Group heading - Tablet/Mobile
         &_group-heading {
-            margin-top: @grid_gutter-width;
+            // !important is used to override a highly specific ul+.h5 rule in base.less
+            margin-top: @grid_gutter-width / 2 !important;
 
             &__hidden {
                 .u-visually-hidden;
@@ -692,6 +695,11 @@ body {
             position: absolute;
             left: 0;
             z-index: 10;
+
+            // Hide the "featured" and "additional resources" headings on desktop.
+            &-list__featured h4 {
+                display: none;
+            }
 
             // Featured item has a highlight box around it.
             &-list__featured-item {
