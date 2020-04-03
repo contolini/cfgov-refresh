@@ -111,7 +111,7 @@
     "test": "snyk test",
     "gulp": "gulp",
     "watch": "gulp watch",
-    "webdriver": "wdio run wdio.conf.js"
+    "webdriver": "wdio run webdriver.conf.js"
   },
   "snyk": true
 }
